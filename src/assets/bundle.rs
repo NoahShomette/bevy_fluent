@@ -78,10 +78,9 @@ async fn load(data: Data, load_context: &mut LoadContext<'_>) -> Result<BundleAs
     for mut path in data.resources {
         if path.is_relative() {
             if let Some(parent) = load_context.path().parent() {
-                let mut parent = parent.to_path_buf();
-                parent.push(path);
-                println!("{:?}", parent);
-                path = parent.canonicalize()?;
+                path = parent.join(path);
+                println!("{:?}", path);
+                path.canonicalize()?;
                 println!("{:?}", path);
             }
         }
