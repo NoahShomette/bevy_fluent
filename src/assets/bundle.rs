@@ -82,7 +82,8 @@ async fn load(data: Data, load_context: &mut LoadContext<'_>) -> Result<BundleAs
     for mut path in data.resources {
         if path.is_relative() {
             if let Some(parent) = load_context.path().parent() {
-                path = parent.join(path);
+                parent.to_path_buf().push(path);
+                path = parent.to_path_buf();
             }
         }
         let loaded = load_context.load_direct(path).await?;
