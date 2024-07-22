@@ -80,7 +80,7 @@ async fn load(data: Data, load_context: &mut LoadContext<'_>) -> Result<BundleAs
             if let Some(parent) = load_context.path().parent() {
                 let mut parent = parent.to_path_buf();
                 parent.push(path);
-                path = parent;
+                path = parent.canonicalize()?;
                 println!("{:?}", path);
             }
         }
