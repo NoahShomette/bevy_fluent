@@ -77,10 +77,11 @@ async fn load(data: Data, load_context: &mut LoadContext<'_>) -> Result<BundleAs
     let mut bundle = FluentBundle::new_concurrent(vec![data.locale.clone()]);
     for mut path in data.resources {
         if path.is_relative() {
-            let mut parent = load_context.path().to_path_buf();
-            parent.push(path);
-            path = parent.to_path_buf();
-            println!("{:?}", path);
+            if let Some(parent) = load_context.path().parent() {
+                parent.to_path_buf().push(path);
+                path = parent.to_path_buf();
+                println!("{:?}", path);
+            }
         }
         let loaded = load_context.load_direct(path).await?;
         let resource = loaded.get::<ResourceAsset>().unwrap();
